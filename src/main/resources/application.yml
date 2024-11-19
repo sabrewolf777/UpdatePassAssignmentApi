@@ -1,0 +1,30 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /experience/operationalServices/issuedDeviceAdministration
+grpc:
+  server:
+    port: 9090
+    address: 0.0.0.0
+    
+spring:
+  application:
+    name: password-management-service
+  
+logging:
+  level:
+    root: INFO
+    com.ec: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always 
+           
+password.update.api.url: http://localhost:8082/seguridad/v1/cliente/usuario/cambiar-clave
