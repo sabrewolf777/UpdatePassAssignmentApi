@@ -140,13 +140,25 @@
    		</dependency>
 	    
 	    <!-- https://mvnrepository.com/artifact/io.quarkus/quarkus-rest-client-jackson -->
-<dependency>
-    <groupId>io.quarkus</groupId>
-    <artifactId>quarkus-rest-client-jackson</artifactId>
-    <version>3.16.1</version>
-</dependency>
-
-
+		<dependency>
+		    <groupId>io.quarkus</groupId>
+		    <artifactId>quarkus-rest-client-jackson</artifactId>
+		    <version>3.16.1</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>				
+		
+		<!-- https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
+		<dependency>
+		    <groupId>jakarta.validation</groupId>
+		    <artifactId>jakarta.validation-api</artifactId>
+		    <version>3.0.0</version>
+		</dependency>
+		
+			
 	</dependencies>
 
 	<build>
@@ -154,6 +166,15 @@
 			<plugin>
 				<groupId>org.graalvm.buildtools</groupId>
 				<artifactId>native-maven-plugin</artifactId>
+				<configuration>
+					<buildArgs>
+						<buildArg>--initialize-at-run-time=ch.qos.logback.core.util.StatusPrinter2</buildArg>
+						<buildArg>--initialize-at-run-time=io.grpc.netty.shaded.io.netty.buffer.AbstractPooledDerivedByteBuf</buildArg>
+						<buildArg>--initialize-at-run-time=io.grpc.netty.shaded.io.netty.buffer.AbstractReferenceCountedByteBuf</buildArg>
+						<buildArg>--initialize-at-run-time=io.grpc.netty.shaded.io.netty.util.AbstractReferenceCounted</buildArg>
+						<buildArg>--initialize-at-run-time=io.grpc.netty.shaded.io.netty.buffer.ByteBufAllocator</buildArg>
+					</buildArgs>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -168,6 +189,14 @@
 					<image>
 						<name>issued-device-administration</name>
 					</image>
+					<aot>
+						<excludes>
+							<exclude>
+								<groupId>ec.com.dinersclub.issuedDeviceAdministration.infrastructure.grpc</groupId>
+								<artifactId>UsageLog$Builder</artifactId>
+							</exclude>
+						</excludes>
+					</aot>
 				</configuration>
 				<executions>
 					<execution>

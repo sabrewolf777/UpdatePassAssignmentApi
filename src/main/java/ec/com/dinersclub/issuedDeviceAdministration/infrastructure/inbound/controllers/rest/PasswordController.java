@@ -6,9 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ec.com.dinersclub.issuedDeviceAdministration.application.create.PasswordCreateUseCase;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.UpdatePasswordAssignmentInstanceRecordRq;
-import ec.com.dinersclub.issuedDeviceAdministration.domain.model.UpdatePasswordAssignmentInstanceRecordRs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import ec.com.dinersclub.issuedDeviceAdministration.infrastructure.validation.ValidPasswordUpdate;
+import jakarta.validation.Valid;
+import ec.com.dinersclub.issuedDeviceAdministration.infrastructure.validation.ValidHeaders;
 
 @RequiredArgsConstructor
 @RestController
@@ -21,14 +23,15 @@ public class PasswordController {
   
 
     @PutMapping("/update")
-    public ResponseEntity<UpdatePasswordAssignmentInstanceRecordRs> passwordUpdate(@RequestBody UpdatePasswordAssignmentInstanceRecordRq request, 
-    																			   @RequestHeader HttpHeaders headers) {
-    	try {
+    public ResponseEntity<Object> passwordUpdate(
+        @Valid @ValidPasswordUpdate @RequestBody UpdatePasswordAssignmentInstanceRecordRq request,
+        @Valid @ValidHeaders @RequestHeader HttpHeaders headers) {
+        try {
             log.info("Recibiendo solicitud de actualización de contraseña request REST: {}, headers:{}",request,headers);
 
-    	}catch(Exception e) {
-    		 log.info("ERROR: {}",e);
-    	}
+        }catch(Exception e) {
+             log.info("ERROR: {}",e);
+        }
         return new ResponseEntity<>(passwordCreateUseCase.passwordUpdate(request, headers), HttpStatus.OK);
     }
     

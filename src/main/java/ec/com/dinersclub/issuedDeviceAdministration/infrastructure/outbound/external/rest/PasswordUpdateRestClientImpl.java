@@ -76,6 +76,10 @@ public class PasswordUpdateRestClientImpl implements PasswordUpdateRestClient {
     	 //List<Tag> tags = new ArrayList<>();
     	DinnersModelRequest resp= null;
     	
+    	Object s= headers.get("recordsAmount");
+    	
+    	
+    	
     	try { 
     		resp= DinnersModelRequest.builder().dinHeader(DinHeader.builder()
 			    												.aplicacionId( headers.get("applicationId") != null ? headers.get("applicationId").toString() : "" ) 
