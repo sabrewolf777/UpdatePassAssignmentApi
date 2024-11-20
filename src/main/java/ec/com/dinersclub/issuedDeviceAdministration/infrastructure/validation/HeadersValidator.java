@@ -1,4 +1,3 @@
-
 package ec.com.dinersclub.issuedDeviceAdministration.infrastructure.validation;
 
 import jakarta.validation.ConstraintValidator;
@@ -13,27 +12,66 @@ public class HeadersValidator implements ConstraintValidator<ValidHeaders, HttpH
 
     @Override
     public boolean isValid(HttpHeaders headers, ConstraintValidatorContext context) {
-        
-    	/*
-    	if (headers == null) {
+    	
+        if (headers == null) {
             addConstraintViolation(context, "Los headers son requeridos");
             return false;
         }
 
         // Validar headers requeridos
-        if (!headers.containsKey("Authorization")) {
-            addConstraintViolation(context, "El header Authorization es requerido");
+        if (!headers.containsKey("applicationId")) {
+            addConstraintViolation(context, "El header applicationId es requerido");
             return false;
         }
 
-        // Validar formato del token Bearer
+        if (!headers.containsKey("channelId")) {
+            addConstraintViolation(context, "El header channelId es requerido");
+            return false;
+        }
+        
+        if (!headers.containsKey("uuid")) {
+            addConstraintViolation(context, "El header uuid es requerido");
+            return false;
+        }
+        
+        if (!headers.containsKey("ipaddress")) {
+            addConstraintViolation(context, "El header ipaddress es requerido");
+            return false;
+        }
+        
+        if (!headers.containsKey("transactionDate")) {
+            addConstraintViolation(context, "El header transactionDate es requerido");
+            return false;
+        }
+        
+        if (!headers.containsKey("simetricKey")) {
+            addConstraintViolation(context, "El header simetricKey es requerido");
+            return false;
+        }
+        
+        if (!headers.containsKey("recordsAmount")) {
+            addConstraintViolation(context, "El header applicationId es requerido");
+            return false;
+        }
+        
+        if (!headers.containsKey("pagesAmount")) {
+            addConstraintViolation(context, "El header applicationId es requerido");
+            return false;
+        }
+        
+        if (!headers.containsKey("pagesCurrentIndex")) {
+            addConstraintViolation(context, "El header applicationId es requerido");
+            return false;
+        }
+        
+        /* Validar formato del token Bearer
         String authHeader = headers.getFirst("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             addConstraintViolation(context, "El formato del token de autorización es inválido");
             return false;
         }
-		*/
-        // Agregar más validaciones de headers según necesidades
+        */
+
 
         return true;
     }

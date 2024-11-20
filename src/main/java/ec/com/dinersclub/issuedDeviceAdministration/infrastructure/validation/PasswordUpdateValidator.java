@@ -1,12 +1,9 @@
 package ec.com.dinersclub.issuedDeviceAdministration.infrastructure.validation;
 
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.UpdatePasswordAssignmentInstanceRecordRq;
-import io.quarkus.logging.Log;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 public class PasswordUpdateValidator implements ConstraintValidator<ValidPasswordUpdate, UpdatePasswordAssignmentInstanceRecordRq> {
 
     @Override
@@ -15,32 +12,37 @@ public class PasswordUpdateValidator implements ConstraintValidator<ValidPasswor
 
     @Override
     public boolean isValid(UpdatePasswordAssignmentInstanceRecordRq request, ConstraintValidatorContext context) {
-    	
-    	log.info("request: {}",request);
-    	
-    	/*
+    	    	
         if (request == null) {
             return false;
         }
         
-        
         // Validar campos requeridos
+      
+        if ( (request.getPasswordAssignment() == null || request.getPasswordAssignment().getPasswordValue() == null) ||  
+        	 request.getPasswordAssignment().getPasswordValue().trim().isEmpty()) {
+            	addConstraintViolation(context, "El passwordValues es requerida");
+            return false;
+        }
+        
         if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
             addConstraintViolation(context, "El username es requerido");
             return false;
         }
 
-        if (request.getCustomerReference() == null) {
-            addConstraintViolation(context, "La referencia del cliente es requerida");
-            return false;
+        
+        if ( (request.getCustomerReference() == null || request.getCustomerReference().getPartyReference() == null || 
+          	  request.getCustomerReference().getPartyReference().getPartyType() == null ) ||  
+          	  request.getCustomerReference().getPartyReference().getPartyType().trim().isEmpty()) {
+              	addConstraintViolation(context, "El dato partyType es requerida");
+              return false;
         }
+        
 
-        if (request.getPaymentCard() == null) {
-            addConstraintViolation(context, "Los datos de la tarjeta son requeridos");
+        if (request.getReason() == null || request.getReason().trim().isEmpty()) {
+            addConstraintViolation(context, "El dato reason es requeridos");
             return false;
         }
-*/
-        // Agregar más validaciones específicas según necesidades
 
         return true;
     }
