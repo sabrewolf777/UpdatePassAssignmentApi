@@ -3,6 +3,8 @@ package ec.com.dinersclub.issuedDeviceAdministration.infrastructure.outbound.ext
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -22,12 +24,13 @@ import ec.com.dinersclub.issuedDeviceAdministration.domain.model.Tag;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.UpdatePasswordAssignmentInstanceRecordRq;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.UpdatePasswordAssignmentInstanceRecordRs;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.UsageLog;
-import lombok.extern.slf4j.Slf4j;
 
 @Component
-@Slf4j
 public class PasswordUpdateRestClientImpl implements PasswordUpdateRestClient {
 
+    private static final Logger log = LoggerFactory.getLogger(PasswordUpdateRestClientImpl.class.getName());
+
+	
 	@Value("${password.update.api.url}")
 	private String apiUrl;
 	    

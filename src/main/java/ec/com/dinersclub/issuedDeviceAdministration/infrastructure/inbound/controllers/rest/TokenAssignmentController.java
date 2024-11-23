@@ -8,17 +8,19 @@ import ec.com.dinersclub.issuedDeviceAdministration.application.create.TokenAssi
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.InitiateTokenAssignmentRq;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.InitiateTokenAssignmentRs;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @RequiredArgsConstructor
 @RestController
-@Slf4j
 @CrossOrigin
 @RequestMapping("/v1/tokenAssignment")
 public class TokenAssignmentController {
+	
+    private static final Logger log = LoggerFactory.getLogger(TokenAssignmentController.class.getName());
 
 	private final TokenAssignmentCreateUseCase tokenAssignmentCreateUseCase;
 	

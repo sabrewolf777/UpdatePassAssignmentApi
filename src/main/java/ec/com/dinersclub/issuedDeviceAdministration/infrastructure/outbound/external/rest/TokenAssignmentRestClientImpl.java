@@ -2,7 +2,8 @@ package ec.com.dinersclub.issuedDeviceAdministration.infrastructure.outbound.ext
 
 import java.util.ArrayList;
 import java.util.List;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -14,11 +15,12 @@ import ec.com.dinersclub.issuedDeviceAdministration.domain.model.InitiateTokenAs
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.MsdSegOtpRequest;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.Paginado;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.Tag;
-import lombok.extern.slf4j.Slf4j;
 
 @Component
-@Slf4j
 public class TokenAssignmentRestClientImpl implements TokenAssignmentRestClient {
+	
+    private static final Logger log = LoggerFactory.getLogger(TokenAssignmentRestClientImpl.class.getName());
+
     private final RestClient restClient;
 
     public TokenAssignmentRestClientImpl(RestClient.Builder builder,@Value("${msd.seg.otp.api.url}")  String baseUrl) {
@@ -26,18 +28,18 @@ public class TokenAssignmentRestClientImpl implements TokenAssignmentRestClient 
         				  .baseUrl(baseUrl)
         				  .build();
     }
-
+    
     public InitiateTokenAssignmentRs generaOTP (InitiateTokenAssignmentRq request, HttpHeaders headers) {
     
     	log.info(" **** generaOTP ***");
     	
     	final MsdSegOtpRequest req=getMsdSegOtpRequest(request,headers);    	   	
     	
-    	InitiateTokenAssignmentRs InitiateTokenAssignmentRs = restClient.post().body(req).retrieve().body(InitiateTokenAssignmentRs.class);
+    	final InitiateTokenAssignmentRs response = restClient.post().body(req).retrieve().body(InitiateTokenAssignmentRs.class);
     	
-    	log.info("InitiateTokenAssignmentRs: {}",InitiateTokenAssignmentRs);
+    	log.info("InitiateTokenAssignmentRs: {}",response);
     	
-    	return  InitiateTokenAssignmentRs;
+    	return  response;
     }
     
     
