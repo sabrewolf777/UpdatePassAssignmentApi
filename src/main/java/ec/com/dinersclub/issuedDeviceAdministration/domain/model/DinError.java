@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class DinError {
-	 private String tipo;
+	    private String tipo;
 	    private String fecha;
 	    private String origen;
 	    private String codigo;

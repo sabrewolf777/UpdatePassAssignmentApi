@@ -28,3 +28,4 @@ management:
       show-details: always 
            
 password.update.api.url: http://localhost:8082/seguridad/v1/cliente/usuario/cambiar-clave
+msd.seg.otp.api.url: https://msd-seg-otp-gsf-dinersclub-migracion-gsf.apps.din-ros-can-dev.9gqx.p1.openshiftapps.com/seguridad/v2/otp/generar 

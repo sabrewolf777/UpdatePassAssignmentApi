@@ -4,6 +4,7 @@ package ec.com.dinersclub.issuedDeviceAdministration.infrastructure.inbound.cont
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.google.cloud.audit.RequestMetadata;
@@ -52,7 +53,7 @@ public class PasswordAssignmentGrpcController extends PasswordAssignmentServiceG
         	
         	 HttpHeaders headers =getHeaders();
         	 
-        	 UpdatePasswordAssignmentInstanceRecordRs  resp=passwordCreateUseCase.passwordUpdate(getReq(request), headers);
+        	 ResponseEntity<UpdatePasswordAssignmentInstanceRecordRs>  resp=passwordCreateUseCase.passwordUpdate(getReq(request), headers);
         	 
         	 log.info("resp: {}",resp);
         	 
@@ -61,21 +62,21 @@ public class PasswordAssignmentGrpcController extends PasswordAssignmentServiceG
 													            		.setPasswordAssignment(ResponsePasswordAssignment.newBuilder()
 													            				.setUsageLog(ec.com.dinersclub.issuedDeviceAdministration.infrastructure.grpc.UsageLog.newBuilder()
 													            						.setLogEntry(ec.com.dinersclub.issuedDeviceAdministration.infrastructure.grpc.LogEntry.newBuilder()
-													            								.setLogEntryDescription(resp.getPasswordAssignment().getUsageLog().getLogEntry().getLogEntryDescription())
-													            								.setLogEntryValueDate(resp.getPasswordAssignment().getUsageLog().getLogEntry().getLogEntryValueDate())
-													            								.setLogEntryIdentification(resp.getPasswordAssignment().getUsageLog().getLogEntry().getLogEntryIdentification())
-													            								.setLogEntryValueTime(resp.getPasswordAssignment().getUsageLog().getLogEntry().getLogEntryValueTime())
+													            								.setLogEntryDescription(resp.getBody().getPasswordAssignment().getUsageLog().getLogEntry().getLogEntryDescription())
+													            								.setLogEntryValueDate(resp.getBody().getPasswordAssignment().getUsageLog().getLogEntry().getLogEntryValueDate())
+													            								.setLogEntryIdentification(resp.getBody().getPasswordAssignment().getUsageLog().getLogEntry().getLogEntryIdentification())
+													            								.setLogEntryValueTime(resp.getBody().getPasswordAssignment().getUsageLog().getLogEntry().getLogEntryValueTime())
 													            								.build())
 													            						.build())
 													            				.build())	
 													            		.setStatusInstanceRecord(StatusInstanceRecord.newBuilder()
-														            								.setStatusType(resp.getStatusInstanceRecord().getStatusType())
-														            								.setTransactionDate(resp.getStatusInstanceRecord().getTransactionDate())
-														            								.setStatus(resp.getStatusInstanceRecord().getStatus())
-														            								.setStatusCode(resp.getStatusInstanceRecord().getStatusCode())
-														            								.setProviderCode(resp.getStatusInstanceRecord().getProviderCode())
-														            								.setMessage(resp.getStatusInstanceRecord().getMessage())
-														            								.setDescription(resp.getStatusInstanceRecord().getDescription())
+														            								.setStatusType(resp.getBody().getStatusInstanceRecord().getStatusType())
+														            								.setTransactionDate(resp.getBody().getStatusInstanceRecord().getTransactionDate())
+														            								.setStatus(resp.getBody().getStatusInstanceRecord().getStatus())
+														            								.setStatusCode(resp.getBody().getStatusInstanceRecord().getStatusCode())
+														            								.setProviderCode(resp.getBody().getStatusInstanceRecord().getProviderCode())
+														            								.setMessage(resp.getBody().getStatusInstanceRecord().getMessage())
+														            								.setDescription(resp.getBody().getStatusInstanceRecord().getDescription())
 													            								.build()) 
 												            		.build();
             log.info("response: {}",response);

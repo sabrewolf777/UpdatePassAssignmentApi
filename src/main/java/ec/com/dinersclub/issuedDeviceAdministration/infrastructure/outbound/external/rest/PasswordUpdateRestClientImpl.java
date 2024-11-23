@@ -1,9 +1,15 @@
 package ec.com.dinersclub.issuedDeviceAdministration.infrastructure.outbound.external.rest;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestTemplate;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.DinBody;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.DinHeader;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.DinnersModelRequest;
@@ -12,6 +18,7 @@ import ec.com.dinersclub.issuedDeviceAdministration.domain.model.LogEntry;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.Paginado;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.PasswordAssignmentRs;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.StatusInstanceRecord;
+import ec.com.dinersclub.issuedDeviceAdministration.domain.model.Tag;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.UpdatePasswordAssignmentInstanceRecordRq;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.UpdatePasswordAssignmentInstanceRecordRs;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.UsageLog;
@@ -21,85 +28,55 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PasswordUpdateRestClientImpl implements PasswordUpdateRestClient {
 
-    private final RestClient restClient;
+	@Value("${password.update.api.url}")
+	private String apiUrl;
+	    
+    public ResponseEntity<UpdatePasswordAssignmentInstanceRecordRs> passwordUpdate(UpdatePasswordAssignmentInstanceRecordRq request,HttpHeaders headers) {
+        
+     	 RestTemplate restTemplate= new RestTemplate();
+    	
+    	 HttpHeaders hdrs = new HttpHeaders();
 
-    public PasswordUpdateRestClientImpl(RestClient.Builder restClientBuilder,@Value("${password.update.api.url}") String baseUrl) {
-        this.restClient = restClientBuilder
-            .baseUrl(baseUrl)
-            .build();
-    }
+    	 final DinnersModelRequest dinnerRequest=getDinnerRequest(request,headers);
+    	 
+    	 HttpEntity<DinnersModelRequest> entity = new HttpEntity<>(dinnerRequest, hdrs);
 
-    public UpdatePasswordAssignmentInstanceRecordRs passwordUpdate(UpdatePasswordAssignmentInstanceRecordRq request,HttpHeaders headers) {
-        	
-    	DinnersModelRequest dinnerRequest=getDinnerRequest(request,headers);
-    	
-    	log.info("DinnersModelRequest: {}",dinnerRequest);
-    	
-    	DinnersModelResponse dinnerResponse = restClient.post().body(dinnerRequest).retrieve().body(DinnersModelResponse.class);
-    	
-    	log.info("dinnerResponse: {}",dinnerResponse);
-    	
-    	UpdatePasswordAssignmentInstanceRecordRs res= new UpdatePasswordAssignmentInstanceRecordRs();
-    	
-    	res.setPasswordAssignment(PasswordAssignmentRs.builder()
-    												  .usageLog(UsageLog.builder()
-    														  			.logEntry(LogEntry.builder()
-    														  					 		  .logEntryDescription(dinnerResponse.getDinBody().getDescripcionTransaccion())
-    														  					 		  .logEntryIdentification(dinnerResponse.getDinBody().getCodigoTransaccion())
-    														  					 		  .logEntryValueDate(dinnerResponse.getDinBody().getFechaTransaccion())
-    														  					 		  .logEntryValueTime(dinnerResponse.getDinBody().getHoraTransaccion())
-    														  							   .build())
-    														  			.build())
-    												  
-    												  .build());
-    	res.setStatusInstanceRecord(StatusInstanceRecord.builder()
-    													.description(dinnerResponse.getDetalle())
-    													.message(dinnerResponse.getMensaje())
-    													.providerCode(dinnerResponse.getCodigoErrorProveedor())
-    													.statusCode(dinnerResponse.getCodigo())
-    													.status(dinnerResponse.getOrigen())
-    													.transactionDate(dinnerResponse.getFecha())
-    													.statusType(dinnerResponse.getTipo())
-    												    .build());
-    	
-    	//res.setDinHeader(dinnerResponse.getDinHeader());
-    	
-    	
-    	log.info("res: {}",res);
-    	
-        return res;
+         ResponseEntity<DinnersModelResponse> response = restTemplate.exchange(apiUrl,HttpMethod.POST,entity, DinnersModelResponse.class);
+
+         log.info("response: {}",response);
+         
+         return  new ResponseEntity<>(getUpair(response),response.getStatusCode());
     }
     
     
     public DinnersModelRequest getDinnerRequest(UpdatePasswordAssignmentInstanceRecordRq request,HttpHeaders headers) {
-    	
-    	 //List<Tag> tags = new ArrayList<>();
-    	DinnersModelRequest resp= null;
-    	
-    	Object s= headers.get("recordsAmount");
-    	
-    	
+    		
+    	DinnersModelRequest resp= null;	
     	
     	try { 
+    		final List<Tag> tags = new ArrayList<>();
+        	tags.add(Tag.builder().clave(getHeaderValueAsString(headers,"tagsKeyValue"))
+				        		  .valor(getHeaderValueAsString(headers,"tagsKeyValue"))
+				        		  .build());
     		resp= DinnersModelRequest.builder().dinHeader(DinHeader.builder()
-			    												.aplicacionId( headers.get("applicationId") != null ? headers.get("applicationId").toString() : "" ) 
-			    												.canalId( headers.get("channelId") != null ? headers.get("channelId").toString() : "" )
-			    												.sesionId(headers.get("sesionId") != null ? headers.get("sesionId").toString() : "" )
-			    												.dispositivo(headers.get("device") != null ? headers.get("device").toString() : "")
-			    												.idioma(headers.get("content-language") != null ? headers.get("content-language").toString() : "" )
-			    												.portalId(headers.get("portalId") != null ? headers.get("portalId").toString() : "")
-			    												.uuid(headers.get("uuid") != null ? headers.get("uuid").toString() : "")
-			    												.ip(headers.get("ipaddress") != null ? headers.get("ipaddress").toString() : "")
-			    												.horaTransaccion(headers.get("transactionDate") != null ? headers.get("transactionDate").toString() : "" )
-			    												.llaveSimetrica(headers.get("simetricKey") != null ? headers.get("simetricKey").toString() : "")
-			    												.usuario(headers.get("userId") != null ? headers.get("userId").toString() : "")
-			    												.paginado(Paginado.builder()
-			    																  //.cantRegistros(headers.get("recordsAmount") != null ? Integer.parseInt( headers.get("recordsAmount").toString()) : 0)
-			    																  //.numTotalPag(headers.get("pagesAmount") != null ? Integer.parseInt( headers.get("pagesAmount").toString()) : 0)
-			    																  //.numPagActual(headers.get("pagesCurrentIndex") != null ? Integer.parseInt(headers.get("pagesCurrentIndex").toString()) : 0)
-			    																  .build())
-			    												//.tags(tags)
-			    												.build())
+																	.aplicacionId(getHeaderValueAsString(headers,"applicationId")) 
+																	.canalId( getHeaderValueAsString(headers,"channelId"))
+																	.sesionId(getHeaderValueAsString(headers,"sesionId"))
+																	.dispositivo(getHeaderValueAsString(headers,"device"))
+																	.idioma(getHeaderValueAsString(headers,"content-language"))
+																	.portalId(getHeaderValueAsString(headers,"portalId"))
+																	.uuid(getHeaderValueAsString(headers,"uuid"))
+																	.ip(getHeaderValueAsString(headers,"ipaddress"))
+																	.horaTransaccion(getHeaderValueAsString(headers,"transactionDate"))
+																	.llaveSimetrica(getHeaderValueAsString(headers,"simetricKey"))
+																	.usuario(getHeaderValueAsString(headers,"userId"))
+																	.paginado(Paginado.builder()
+			    																  .cantRegistros(getHeaderValueAsInt(headers,"recordsAmount"))
+			    																  .numPagActual(getHeaderValueAsInt(headers,"pagesCurrentIndex"))
+			    																  .numTotalPag(getHeaderValueAsInt(headers,"pagesAmount"))
+			    															  .build())
+																	.tags(tags)
+			    											.build())
     										.dinBody(DinBody.builder()
     												        .clave(request.getPasswordAssignment().getPasswordStoredValue())
     												        .nuevaClave(request.getPasswordAssignment().getPasswordValue())
@@ -121,6 +98,64 @@ public class PasswordUpdateRestClientImpl implements PasswordUpdateRestClient {
     	}
     	return resp;
     	
+    }
+    
+    
+    private UpdatePasswordAssignmentInstanceRecordRs getUpair(ResponseEntity<DinnersModelResponse> response) {
+    	
+    	UpdatePasswordAssignmentInstanceRecordRs res= null;
+    	
+    	if(response.getBody() != null) {
+    		res= new UpdatePasswordAssignmentInstanceRecordRs();
+    		if(response.getBody().getDinBody() != null) {
+	    		res.setPasswordAssignment(PasswordAssignmentRs.builder()
+										  .usageLog(UsageLog.builder()
+												  			.logEntry(LogEntry.builder()
+												  					 		  .logEntryDescription(response.getBody().getDinBody().getDescripcionTransaccion())
+												  					 		  .logEntryIdentification(response.getBody().getDinBody().getCodigoTransaccion())
+												  					 		  .logEntryValueDate(response.getBody().getDinBody().getFechaTransaccion())
+												  					 		  .logEntryValueTime(response.getBody().getDinBody().getHoraTransaccion())
+												  							  .build())
+								  			.build())
+				   .build());
+    		}
+    		if(Objects.nonNull(response.getBody().getDinError())) {
+    			res.setStatusInstanceRecord(StatusInstanceRecord.builder()
+						.description(response.getBody().getDinError().getDetalle())
+						.message(response.getBody().getDinError().getMensaje())
+						.providerCode(response.getBody().getDinError().getCodigoErrorProveedor())
+						.statusCode(response.getBody().getDinError().getCodigo())
+						.status(response.getBody().getDinError().getOrigen())
+						.transactionDate(response.getBody().getDinError().getFecha())
+						.statusType(response.getBody().getDinError().getTipo())
+					    .build());
+    		}
+			
+    	}
+    	
+    	
+    	return res;
+    }
+    
+    
+    public int getHeaderValueAsInt(HttpHeaders headers, String headerName) {
+        String headerValue = headers.getFirst(headerName);
+        if (headerValue != null) {
+            try {
+                return Integer.parseInt(headerValue);
+            } catch (NumberFormatException e) {
+            	log.error("El valor del encabezado no es un número válido: " + headerValue);
+            }
+        }
+        return 0;
+     }
+    
+    public String getHeaderValueAsString(HttpHeaders headers, String headerName) {
+        final String headerValue = headers.getFirst(headerName);
+        if(headerValue != null) {
+        	 return headerValue;
+        }
+        return "";
     }
     
 } 
