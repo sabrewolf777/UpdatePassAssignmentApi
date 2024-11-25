@@ -3,6 +3,7 @@ package ec.com.dinersclub.issuedDeviceAdministration.infrastructure.inbound.cont
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ec.com.dinersclub.issuedDeviceAdministration.application.create.PasswordCreateUseCase;
@@ -28,7 +29,7 @@ public class PasswordController {
         @Valid @ValidPasswordUpdate @RequestBody UpdatePasswordAssignmentInstanceRecordRq request,
         @Valid @ValidHeaders @RequestHeader HttpHeaders headers) {
         log.info("Recibiendo solicitud de actualización de contraseña request REST: {}, headers:{}",request,headers);
-        return passwordCreateUseCase.passwordUpdate(request, headers);
+        return new ResponseEntity<>(passwordCreateUseCase.passwordUpdate(request, headers),HttpStatus.OK);
     }
 
 } 

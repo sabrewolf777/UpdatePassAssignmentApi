@@ -7,14 +7,14 @@ spec:
   replicas: 3
   selector:
     matchLabels:
-      app: mi-aplicacion
+      app: issuedDeviceAdminstration
   template:
     metadata:
       labels:
-        app: mi-aplicacion
+        app: issuedDeviceAdminstration
     spec:
       containers:
-      - name: mi-aplicacion
+      - name: issuedDeviceAdminstration
         image: mi-imagen:latest
         ports:
         - containerPort: 8080
@@ -29,11 +29,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mi-aplicacion-service
+  name: issuedDeviceAdminstration-service
 spec:
   type: LoadBalancer
   ports:
   - port: 80
     targetPort: 8080
   selector:
-    app: mi-aplicacion 
+    app: issuedDeviceAdminstration

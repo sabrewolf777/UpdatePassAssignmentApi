@@ -11,6 +11,6 @@ public class VersionServiceImpl implements VersionService {
     @Override
     public String getVersion() {
         log.info("Ejecutando obtención de versión");
-        return "1.0.0"; // Puedes modificar esto según tus necesidades
+        return "1.0.0"; 
     }
 } 

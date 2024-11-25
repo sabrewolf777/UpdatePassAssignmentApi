@@ -1,7 +1,6 @@
 package ec.com.dinersclub.issuedDeviceAdministration.infrastructure.outbound;
 
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.UpdatePasswordAssignmentInstanceRecordRq;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.UpdatePasswordAssignmentInstanceRecordRs;
@@ -19,7 +18,7 @@ public class PasswordCommandRepositoryImpl implements PasswordCommandRepository 
 	private final PasswordUpdateRestClientImpl passwordClient;
 	
 	@Override
-	public ResponseEntity<UpdatePasswordAssignmentInstanceRecordRs> updatePost(UpdatePasswordAssignmentInstanceRecordRq request, HttpHeaders headers) {	
+	public UpdatePasswordAssignmentInstanceRecordRs passwordUpdate(UpdatePasswordAssignmentInstanceRecordRq request, HttpHeaders headers) {	
 		return passwordClient.passwordUpdate(request, headers);
 	}
 

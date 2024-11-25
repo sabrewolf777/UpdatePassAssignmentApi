@@ -1,28 +1,17 @@
 package ec.com.dinersclub.issuedDeviceAdministration.infrastructure.inbound.controllers.grpc;
 
-//import java.net.http.HttpHeaders;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestHeader;
-
-import com.google.cloud.audit.RequestMetadata;
-
 import ec.com.dinersclub.issuedDeviceAdministration.application.create.PasswordCreateUseCase;
-import ec.com.dinersclub.issuedDeviceAdministration.application.service.PasswordService;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.CustomerReference;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.IdentifierValue;
-import ec.com.dinersclub.issuedDeviceAdministration.domain.model.LogEntry;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.PartyReference;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.PasswordAssignment;
-import ec.com.dinersclub.issuedDeviceAdministration.domain.model.PasswordAssignmentRs;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.PaymentCard;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.TokenAssignment;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.TokenIdentificationCode;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.UpdatePasswordAssignmentInstanceRecordRq;
 import ec.com.dinersclub.issuedDeviceAdministration.domain.model.UpdatePasswordAssignmentInstanceRecordRs;
-import ec.com.dinersclub.issuedDeviceAdministration.domain.model.UsageLog;
 import ec.com.dinersclub.issuedDeviceAdministration.infrastructure.grpc.PasswordAssignmentServiceGrpc;
 import ec.com.dinersclub.issuedDeviceAdministration.infrastructure.grpc.Rec_updatePasswordAssignmentInstanceRecordRq;
 import ec.com.dinersclub.issuedDeviceAdministration.infrastructure.grpc.Rec_updatePasswordAssignmentInstanceRecordRs;
@@ -30,7 +19,6 @@ import ec.com.dinersclub.issuedDeviceAdministration.infrastructure.grpc.Response
 import ec.com.dinersclub.issuedDeviceAdministration.infrastructure.grpc.StatusInstanceRecord;
 import io.grpc.Metadata;
 import io.grpc.stub.StreamObserver;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
@@ -42,9 +30,9 @@ public class PasswordAssignmentGrpcController extends PasswordAssignmentServiceG
 
 	private final PasswordCreateUseCase passwordCreateUseCase;
 	
-	//public PasswordAssignmentGrpcController(){}
 	private Metadata requestHeaders;
 	
+    @Override
     public void updatePasswordAssignmentInstance(Rec_updatePasswordAssignmentInstanceRecordRq request,
             									 StreamObserver<Rec_updatePasswordAssignmentInstanceRecordRs> responseObserver) {
         	log.info("request grpc.....");
@@ -53,30 +41,27 @@ public class PasswordAssignmentGrpcController extends PasswordAssignmentServiceG
         	
         	 HttpHeaders headers =getHeaders();
         	 
-        	 ResponseEntity<UpdatePasswordAssignmentInstanceRecordRs>  resp=passwordCreateUseCase.passwordUpdate(getReq(request), headers);
-        	 
-        	 log.info("resp: {}",resp);
-        	 
-            // Aquí iría la lógica de negocio
-            Rec_updatePasswordAssignmentInstanceRecordRs response = Rec_updatePasswordAssignmentInstanceRecordRs.newBuilder()
+        	 UpdatePasswordAssignmentInstanceRecordRs  resp=passwordCreateUseCase.passwordUpdate(getReq(request), headers);
+        	         	 
+             Rec_updatePasswordAssignmentInstanceRecordRs response = Rec_updatePasswordAssignmentInstanceRecordRs.newBuilder()
 													            		.setPasswordAssignment(ResponsePasswordAssignment.newBuilder()
 													            				.setUsageLog(ec.com.dinersclub.issuedDeviceAdministration.infrastructure.grpc.UsageLog.newBuilder()
 													            						.setLogEntry(ec.com.dinersclub.issuedDeviceAdministration.infrastructure.grpc.LogEntry.newBuilder()
-													            								.setLogEntryDescription(resp.getBody().getPasswordAssignment().getUsageLog().getLogEntry().getLogEntryDescription())
-													            								.setLogEntryValueDate(resp.getBody().getPasswordAssignment().getUsageLog().getLogEntry().getLogEntryValueDate())
-													            								.setLogEntryIdentification(resp.getBody().getPasswordAssignment().getUsageLog().getLogEntry().getLogEntryIdentification())
-													            								.setLogEntryValueTime(resp.getBody().getPasswordAssignment().getUsageLog().getLogEntry().getLogEntryValueTime())
+													            								.setLogEntryDescription(resp.getPasswordAssignment().getUsageLog().getLogEntry().getLogEntryDescription())
+													            								.setLogEntryValueDate(resp.getPasswordAssignment().getUsageLog().getLogEntry().getLogEntryValueDate())
+													            								.setLogEntryIdentification(resp.getPasswordAssignment().getUsageLog().getLogEntry().getLogEntryIdentification())
+													            								.setLogEntryValueTime(resp.getPasswordAssignment().getUsageLog().getLogEntry().getLogEntryValueTime())
 													            								.build())
 													            						.build())
 													            				.build())	
 													            		.setStatusInstanceRecord(StatusInstanceRecord.newBuilder()
-														            								.setStatusType(resp.getBody().getStatusInstanceRecord().getStatusType())
-														            								.setTransactionDate(resp.getBody().getStatusInstanceRecord().getTransactionDate())
-														            								.setStatus(resp.getBody().getStatusInstanceRecord().getStatus())
-														            								.setStatusCode(resp.getBody().getStatusInstanceRecord().getStatusCode())
-														            								.setProviderCode(resp.getBody().getStatusInstanceRecord().getProviderCode())
-														            								.setMessage(resp.getBody().getStatusInstanceRecord().getMessage())
-														            								.setDescription(resp.getBody().getStatusInstanceRecord().getDescription())
+														            								.setStatusType(getValueAsString(resp.getStatusInstanceRecord().getStatusType()))
+														            								.setTransactionDate(getValueAsString(resp.getStatusInstanceRecord().getTransactionDate()))
+														            								.setStatus(getValueAsString(resp.getStatusInstanceRecord().getStatus()))
+														            								.setStatusCode(getValueAsString(resp.getStatusInstanceRecord().getStatusCode()))
+														            								.setProviderCode(getValueAsString(resp.getStatusInstanceRecord().getProviderCode()))
+														            								.setMessage(getValueAsString(resp.getStatusInstanceRecord().getMessage()))
+														            								.setDescription(getValueAsString(resp.getStatusInstanceRecord().getDescription()))
 													            								.build()) 
 												            		.build();
             log.info("response: {}",response);
@@ -144,4 +129,11 @@ public class PasswordAssignmentGrpcController extends PasswordAssignmentServiceG
         return requestHeaders.get(metadataKey);
     }
     
+    public String getValueAsString(String value) {
+        final String valueReturn = value;
+        if(valueReturn != null) {
+        	 return valueReturn;
+        }
+        return "";
+    }
 } 
