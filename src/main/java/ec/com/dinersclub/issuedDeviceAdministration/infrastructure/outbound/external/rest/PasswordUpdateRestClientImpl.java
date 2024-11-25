@@ -29,7 +29,7 @@ public class PasswordUpdateRestClientImpl implements PasswordUpdateRestClient {
 
     private static final Logger log = LoggerFactory.getLogger(PasswordUpdateRestClientImpl.class.getName());
 	
-	@Value("${password.update.api.url}")
+	@Value("${msd.seg.cli.usuario.api.url}")
 	private String apiUrl;
 	    
     public UpdatePasswordAssignmentInstanceRecordRs passwordUpdate(UpdatePasswordAssignmentInstanceRecordRq request,HttpHeaders headers) {

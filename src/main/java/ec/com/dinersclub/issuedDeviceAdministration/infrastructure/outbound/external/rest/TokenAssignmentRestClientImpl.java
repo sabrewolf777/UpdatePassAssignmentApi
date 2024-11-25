@@ -90,7 +90,7 @@ public class TokenAssignmentRestClientImpl implements TokenAssignmentRestClient 
             try {
                 return Integer.parseInt(headerValue);
             } catch (NumberFormatException e) {
-            	log.error("El valor del encabezado no es un número válido: " + headerValue);
+            	log.error("El valor del encabezado no es un número válido: {}", headerValue);
             }
         }
         return 0;

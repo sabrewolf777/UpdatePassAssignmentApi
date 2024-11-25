@@ -27,5 +27,5 @@ management:
     health:
       show-details: always 
                
-password.update.api.url: https://${MSD_SEG_CLI_USER__ENDPOINT}/seguridad/v1/cliente/usuario/cambiar-clave
-msd.seg.otp.api.url: https://${MSD_SEG_OTP__ENDPOINT}/seguridad/v2/otp/generar 
+msd.seg.cli.usuario.api.url: https://${MSD_SEG_CLI_USER_ENDPOINT}/seguridad/v1/cliente/usuario/cambiar-clave
+msd.seg.otp.api.url: https://${MSD_SEG_OTP_ENDPOINT}/seguridad/v2/otp/generar 
