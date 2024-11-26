@@ -13,15 +13,7 @@ import lombok.Setter;
 @Builder
 public class InitiateTokenAssignmentRs {
 
-	 	@Getter
-	    @Setter
-	    @NoArgsConstructor
-	    @AllArgsConstructor
-	    @Builder
-	    public static class TokenAssignment {
-	        private String description;
-	    }
-	 
-	 	private StatusInstanceRecord instanceRecord;
+		private TokenAssignmentOtp tokenAssignment;
+	 	private StatusInstanceRecord statusInstanceRecord;
 	 	
 }

@@ -33,7 +33,9 @@ public class PasswordUpdateRestClientImpl implements PasswordUpdateRestClient {
 	private String apiUrl;
 	    
     public UpdatePasswordAssignmentInstanceRecordRs passwordUpdate(UpdatePasswordAssignmentInstanceRecordRq request,HttpHeaders headers) {
-	    
+    	
+    	log.info(" **** cambio de password ***");
+    	
     	final RestTemplate restTemplate= new RestTemplate();
 	    	
 	    final HttpHeaders hdrs = new HttpHeaders();

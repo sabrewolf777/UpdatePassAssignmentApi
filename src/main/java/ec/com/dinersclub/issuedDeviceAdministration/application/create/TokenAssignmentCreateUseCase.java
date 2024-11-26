@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TokenAssignmentCreateUseCase {
 
-	TokenAssignmentCommandRepository tokenAssignmentCommandRepository;
+	private final TokenAssignmentCommandRepository tokenAssignmentCommandRepository;
 	
 	public InitiateTokenAssignmentRs generaOTP(InitiateTokenAssignmentRq request, HttpHeaders headers) {
 		return tokenAssignmentCommandRepository.generaOTP(request, headers);

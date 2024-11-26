@@ -135,6 +135,10 @@
           <groupId>com.jayway.jsonpath</groupId>
         </exclusion>
         <exclusion>
+          <artifactId>jakarta.xml.bind-api</artifactId>
+          <groupId>jakarta.xml.bind</groupId>
+        </exclusion>
+        <exclusion>
           <artifactId>json-smart</artifactId>
           <groupId>net.minidev</groupId>
         </exclusion>
@@ -229,12 +233,6 @@
       <groupId>org.apache.tomcat</groupId>
       <artifactId>annotations-api</artifactId>
       <version>6.0.53</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-rest-client-jackson</artifactId>
-      <version>3.16.1</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

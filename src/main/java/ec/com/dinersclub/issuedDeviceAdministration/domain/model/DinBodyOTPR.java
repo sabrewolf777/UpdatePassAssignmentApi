@@ -12,12 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DinError {
-	    private String tipo;
-	    private String fecha;
-	    private String origen;
-	    private String codigo;
-	    private String codigoErrorProveedor;
-	    private String mensaje;
-	    private String detalle;
+public class DinBodyOTPR {
+	private String respuestaSolicitud;
 }

@@ -1,19 +1,17 @@
 package ec.com.dinersclub.issuedDeviceAdministration.infrastructure.exception;
 
 import jakarta.validation.ConstraintViolationException;
-import jakarta.ws.rs.BadRequestException;
-import jakarta.ws.rs.ForbiddenException;
-import jakarta.ws.rs.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.client.HttpClientErrorException.BadRequest;
+import org.springframework.web.client.HttpClientErrorException.Forbidden;
+import org.springframework.web.client.HttpClientErrorException.NotFound;
 import org.springframework.web.client.HttpClientErrorException.Unauthorized;
-
 import io.grpc.netty.shaded.io.netty.handler.timeout.TimeoutException;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,12 +44,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)//500
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR, reason = "error de lado del servidor")
     public void everyException(Exception e) {
-        log.info(MENSAJE_ERROR_GENERAL,INTERNAL_ERROR_CUSTOM_MESSAGE);
+        log.info(MENSAJE_ERROR_GENERAL,INTERNAL_ERROR_CUSTOM_MESSAGE +":::{"+e.getMessage()+"}");
     }
     
-    @ExceptionHandler(NotFoundException.class)//404
+    @ExceptionHandler(NotFound.class)//404
     @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "recurso no encontrado")
-    public void everyException(NotFoundException e) {
+    public void everyException(NotFound e) {
         log.info(MENSAJE_ERROR_GENERAL,e.getMessage());
     }
     
@@ -61,15 +59,15 @@ public class GlobalExceptionHandler {
         log.info(MENSAJE_ERROR_GENERAL,e.getMessage());
     }
     
-    @ExceptionHandler(ForbiddenException.class)//403
+    @ExceptionHandler(Forbidden.class)//403
     @ResponseStatus(code = HttpStatus.FORBIDDEN, reason = "recurso no encontrado")
-    public void everyException(ForbiddenException e) {
+    public void everyException(Forbidden e) {
         log.info(MENSAJE_ERROR_GENERAL,e.getMessage());
     }
     
-    @ExceptionHandler(BadRequestException.class)//400
+    @ExceptionHandler(BadRequest.class)//400
     @ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "request mal implementado")
-    public void everyException(BadRequestException e) {
+    public void everyException(BadRequest e) {
         log.info(MENSAJE_ERROR_GENERAL,e.getMessage());
     }
     
